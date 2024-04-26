@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Amor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #e91e63;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        #result {
+            font-size: 1.2em;
+        }
+        #ageForm, #surveyForm, #ageDifferenceForm {
+            display: none;
+        }
+        .age-box {
+            display: inline-block;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Juego de Amor</h1>
+
+    <form id="namesForm">
+        <label for="yourName">Tu Nombre:</label>
+        <input type="text" id="yourName" required>
+        <br><br>
+        <label for="partnerName">Nombre de tu Pareja:</label>
+        <input type="text" id="partnerName" required>
+        <br><br>
+        <button type="submit">Continuar Encuesta</button>
+    </form>
+
+    <form id="ageForm">
+        <label for="partnerDOB">Fecha de Nacimiento de tu Pareja:</label>
+        <input type="date" id="partnerDOB" required>
+        <span class="age-box" id="partnerAgeBox"></span>
+        <br><br>
+        <label for="partnerAge">Edad de tu Pareja:</label>
+        <input type="number" id="partnerAge" required readonly>
+        <br><br>
+        <button type="button" onclick="nextSurvey()">Continuar Encuesta</button>
+    </form>
+
+    <div id="result"></div>
+
+    <form id="surveyForm">
+        <label for="partnerFullName">Nombre Completo de tu Pareja:</label>
+        <input type="text" id="partnerFullName" required>
+        <br><br>
+        <label for="yourFullName">Tu Nombre Completo:</label>
+        <input type="text" id="yourFullName" required>
+        <br><br>
+        <label for="yourDOB">Tu Fecha de Nacimiento:</label>
+        <input type="date" id="yourDOB" required>
+        <span class="age-box" id="yourAgeBox"></span>
+        <br><br>
+        <label for="partnerDOB_survey">Fecha de Nacimiento de tu Pareja:</label>
+        <input type="date" id="partnerDOB_survey" required>
+        <span class="age-box" id="partnerAgeBox_survey"></span>
+        <br><br>
+        <label for="relationship">Estas con el por:</label>
+        <select id="relationship" required>
+            <option value="por amor">Amor</option>
+            <option value="por su dinero">Dinero</option>
+            <option value="por pasar el rato">Rato</option>
+            <option value="pasatiempo">Pasatiempo</option>
+        </select>
+        <br><br>
+        <button type="button" onclick="checkAgeDifference()">Continuar</button>
+    </form>
+
+    <form id="ageDifferenceForm">
+        <p id="ageDifferenceQuestion"></p>
+        <button type="button" onclick="setAgePreference(true)">Sí</button>
+        <button type="button" onclick="setAgePreference(false)">No</button>
+    </form>
+
+    <button id="finishSurvey" style="display: none;" onclick="sendEmail()">Terminar Encuesta</button>
+
+    <script>
+        var yourName, partnerName;
+
+        function calculateAge(birthDate) {
+            var today = new Date();
+            var birthDateObj = new Date(birthDate);
+            var age = today.getFullYear() - birthDateObj.getFullYear();
+            var month = today.getMonth() - birthDateObj.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < birthDateObj.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        document.getElementById('partnerDOB').addEventListener('change', function() {
+            var partnerAge = calculateAge(this.value);
+            document.getElementById('partnerAge').value = partnerAge;
+            document.getElementById('partnerAgeBox').textContent = '(' + partnerAge + ' años)';
+        });
+
+        document.getElementById('yourDOB').addEventListener('change', function() {
+            var yourAge = calculateAge(this.value);
+            document.getElementById('yourAgeBox').textContent = '(' + yourAge + ' años)';
+        });
+
+        document.getElementById('partnerDOB_survey').addEventListener('change', function() {
+            var partnerAge = calculateAge(this.value);
+            document.getElementById('partnerAgeBox_survey').textContent = '(' + partnerAge + ' años)';
+        });
+
+        function nextSurvey() {
+            if (document.getElementById('namesForm').style.display !== 'none') {
+                yourName = document.getElementById('yourName').value;
+                partnerName = document.getElementById('partnerName').value;
+                document.getElementById('namesForm').style.display = 'none';
+                document.getElementById('ageForm').style.display = 'block';
+                document.getElementById('result').textContent = `¡Hola ${yourName} y ${partnerName}! Por favor ingresa la fecha de nacimiento y la edad de tu pareja para continuar con la encuesta.`;
+            } else if (document.getElementById('ageForm').style.display !== 'none') {
+                document.getElementById('ageForm').style.display = 'none';
+                document.getElementById('surveyForm').style.display = 'block';
+            }
+        }
+
+        function checkAgeDifference() {
+            var yourDOB = new Date(document.getElementById('yourDOB').value);
+            var yourAge = calculateAge(yourDOB);
+            var partnerDOB = new Date(document.getElementById('partnerDOB_survey').value);
+            var partnerAge = calculateAge(partnerDOB);
+
+            var question = '';
+            if (yourDOB < partnerDOB) {
+                question = '¿Te gustan mayores?';
+            } else if (yourDOB > partnerDOB) {
+                question = '¿Te gustan menores?';
+            }
+
+            if (question !== '') {
+                document.getElementById('ageDifferenceQuestion').textContent = question;
+                document.getElementById('surveyForm').style.display = 'none';
+                document.getElementById('ageDifferenceForm').style.display = 'block';
+                document.getElementById('finishSurvey').style.display = 'block';
+            } else {
+                sendEmail();
+            }
+        }
+
+        function setAgePreference(likeOlder) {
+            var resultDiv = document.getElementById('result');
+            if (likeOlder) {
+                resultDiv.textContent += '\n¡Te gustan mayores!';
+            } else {
+                resultDiv.textContent += '\nNo te gustan mayores.';
+            }
+        }
+
+        function sendEmail() {
+            var yourFullName = document.getElementById('yourFullName').value;
+            var yourDOB = document.getElementById('yourDOB').value;
+            var partnerFullName = document.getElementById('partnerFullName').value;
+            var partnerDOB = document.getElementById('partnerDOB_survey').value;
+            var relationship = document.getElementById('relationship').value;
+
+            // Código para enviar el correo electrónico
+            console.log('Correo electrónico enviado con los datos de la encuesta:');
+            console.log('Nombre completo de la persona:', yourFullName);
+            console.log('Fecha de nacimiento de la persona:', yourDOB);
+            console.log('Nombre completo de la pareja:', partnerFullName);
+            console.log('Fecha de nacimiento de la pareja:', partnerDOB);
+            console.log('Relación:', relationship);
+        }
+
+        document.getElementById('namesForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            yourName = document.getElementById('yourName').value;
+            partnerName = document.getElementById('partnerName').value;
+            document.getElementById('namesForm').style.display = 'none';
+            document.getElementById('ageForm').style.display = 'block';
+            document.getElementById('result').textContent = `¡Hola ${yourName} y ${partnerName}! Por favor ingresa la fecha de nacimiento y la edad de tu pareja para continuar con la encuesta.`;
+        });
+
+        document.getElementById('ageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var partnerDOB = new Date(document.getElementById('partnerDOB').value);
+            var partnerAge = calculateAge(partnerDOB);
+            var today = new Date();
+            var partnerYearOfBirth = today.getFullYear() - partnerAge;
+            if (today.getMonth() < partnerDOB.getMonth() || (today.getMonth() === partnerDOB.getMonth() && today.getDate() < partnerDOB.getDate())) {
+                partnerYearOfBirth--;
+            }
+            var resultDiv = document.getElementById('result');
+            if (partnerYearOfBirth === partnerDOB.getFullYear()) {
+                resultDiv.textContent += '\n¡Es amor real!';
+            } else {
+                resultDiv.textContent += '\nNo es amor real.';
+            }
+        });
+    </script>
+</body>
+</html>
