@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para ti, mi amor 💞</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('b8352df0-904e-4369-9b7c-872a84279a8e.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      max-width: 800px;
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    button {
+      margin-top: 20px;
+      background: #ff4081;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 64, 129, 0.6);
+    }
+    .mensaje {
+      margin-top: 20px;
+      font-size: 1.4em;
+      line-height: 1.5em;
+      animation: aparecer 0.6s ease;
+      white-space: pre-line;
+    }
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ❤️ Corazones animados ❤️ */
+    .corazon {
+      position: fixed;
+      bottom: 0;
+      color: #ff5fa2;
+      font-size: 24px;
+      animation: subir 5s linear infinite;
+      opacity: 0.8;
+      z-index: 0;
+    }
+    @keyframes subir {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-50vh) scale(1.3);
+      }
+      100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1 id="saludo">💞</h1>
+    <p class="mensaje" id="mensaje">Toca el botón para recibir un mensaje único de amor 💌</p>
+    <button id="boton">Un mensaje para ti 💞</button>
+  </div>
+
+  <script>
+    const mensajes = [
+      "Eres mi pensamiento favorito al despertar 💭💞",
+      "Cada día contigo es un regalo que no quiero perder jamás 🎁💘",
+      "Tu sonrisa tiene el poder de alegrarme cualquier día 🌞",
+      "Eres la razón por la que mi corazón late con más fuerza 💓",
+      "Si pudiera elegir de nuevo, te elegiría a ti una y mil veces 💍",
+      "Tu amor es mi canción favorita que nunca deja de sonar 🎶",
+      "Solo tú haces que cada momento sea perfecto 💞",
+      "El amor verdadero tiene tu nombre 💌",
+      "Tu mirada es el refugio donde mi alma descansa 💫",
+      "Eres mi hoy, mi mañana y mi siempre 🌹",
+      "Cuando pienso en felicidad, pienso en ti 💕",
+      "No necesito nada más si tengo tu amor 💗",
+      "Tus abrazos son el mejor lugar del mundo 🌎🤗",
+      "Contigo cada día tiene sentido 💖",
+      "Tú eres mi destino, mi suerte y mi vida 🍀",
+      "No hay distancia que apague lo que siento por ti 🌍❤️",
+      "Eres la persona que hace que todo valga la pena 💕",
+      "Tu voz es mi melodía favorita 🎵💞",
+      "Cada segundo contigo se convierte en recuerdo eterno ⏳💓",
+      "Te amo más de lo que las palabras pueden decir 💬💘",
+      "Tú y yo contra el mundo, siempre 💪💞",
+      "Gracias por existir y hacerme tan feliz 💫",
+      "Tu amor es mi mayor bendición 🙏💖",
+      "Eres el mejor capítulo de mi historia 📖💗",
+      "Tu felicidad es mi meta diaria 💞",
+      "Eres la calma que mi alma buscaba 🌊💘",
+      "No hay nadie que me haga sentir como tú 💓",
+      "Mi corazón solo tiene espacio para ti 💖",
+      "Tu risa es el sonido más lindo del universo 🌌😂",
+      "Eres la razón de mis mejores días 🌞💞",
+      "No existe lugar más seguro que tus brazos 💕",
+      "Tu amor me da fuerzas para todo 💪💗",
+      "Eres mi pensamiento más bonito 🌹",
+      "Cada beso tuyo es una promesa cumplida 💋",
+      "Te amo con todo lo que soy 💘",
+      "Nada ni nadie podrá reemplazarte 💖",
+      "Eres mi hogar, no importa dónde esté 🏡💞",
+      "Me enamoro de ti todos los días un poco más 💫",
+      "Tu amor ilumina mis noches más oscuras 🌙💗",
+      "No hay palabras que alcancen para describirte 💞",
+      "Eres mi principio y mi fin 💘",
+      "Mi vida cambió desde que llegaste tú 💫",
+      "Tu ternura derrite mi alma 💕",
+      "Si el amor tuviera rostro, sería el tuyo 💖",
+      "Tú haces que todo cobre sentido 💞",
+      "Mi corazón sonríe cada vez que pienso en ti 💗",
+      "Te amo más que ayer, pero menos que mañana 💘",
+      "Gracias por ser mi razón y mi locura 💞",
+      "Sin ti, todo pierde color 🌈💖",
+      "Eres mi todo, y eso nunca cambiará 💞"
+    ];
+
+    let disponibles = [...mensajes];
+
+    document.getElementById('boton').addEventListener('click', () => {
+      if (disponibles.length === 0) disponibles = [...mensajes];
+      const indice = Math.floor(Math.random() * disponibles.length);
+      const mensaje = disponibles.splice(indice, 1)[0];
+      document.getElementById('mensaje').textContent = mensaje;
+    });
+
+    // Detectar hora y mostrar saludo
+    const hora = new Date().getHours();
+    const saludo = document.getElementById('saludo');
+    if (hora >= 5 && hora < 12) saludo.textContent = "☀️ Buenos días, mi amor 💛";
+    else if (hora >= 12 && hora < 18) saludo.textContent = "🌤️ Buenas tardes, mi vida 💖";
+    else saludo.textContent = "🌙 Buenas noches, mi corazón 💞";
+
+    // ❤️ Generador de corazones flotantes ❤️
+    function crearCorazon() {
+      const corazon = document.createElement("div");
+      corazon.classList.add("corazon");
+      corazon.textContent = "💖";
+      corazon.style.left = Math.random() * 100 + "vw";
+      corazon.style.fontSize = (Math.random() * 20 + 20) + "px";
+      corazon.style.animationDuration = (Math.random() * 3 + 4) + "s";
+      document.body.appendChild(corazon);
+      setTimeout(() => corazon.remove(), 7000);
+    }
+    setInterval(crearCorazon, 400);
+  </script>
+</body>
+</html>
+
+Mi página está provocando error 404 
